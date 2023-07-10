@@ -1,0 +1,30 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+    # googleCloudBuild:
+    #   projectId: my-k8-engine-project-id
+  artifacts:
+    - image: deep00987/auth
+    # - image: us.gcr.io/my-k8-engine-project-id/auth
+      context: auth
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .
+    - image: deep00987/client
+    # - image: us.gcr.io/my-k8-engine-project-id/auth
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "**/*.js"
+            dest: .
